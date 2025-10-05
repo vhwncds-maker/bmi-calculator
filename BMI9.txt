@@ -1,0 +1,88 @@
+<div style="max-width:520px; margin:auto; padding:20px; border-radius:12px; 
+            border:2px solid #4CAF50; background:#f9fff9; font-family:Arial, sans-serif;">
+  <h2 style="text-align:center; color:#4CAF50;">เครื่องคำนวณ BMI</h2>
+  <p style="text-align:center;">กรอกน้ำหนักและส่วนสูงของคุณ เพื่อตรวจสอบสถานะร่างกาย</p>
+  
+  <label><b>น้ำหนัก (kg):</b></label><br>
+  <input type="number" id="weight" placeholder="เช่น 60" style="width:90%; padding:6px; margin:6px 0;"><br>
+  
+  <label><b>ส่วนสูง (cm):</b></label><br>
+  <input type="number" id="height" placeholder="เช่น 170" style="width:90%; padding:6px; margin:6px 0;"><br>
+  
+  <button onclick="calculateBMI()" 
+          style="padding:10px 25px; margin-top:10px; background:#4CAF50; color:white; 
+                 border:none; border-radius:6px; cursor:pointer; font-size:16px;">
+    คำนวณ BMI
+  </button>
+  
+  <div id="result" style="margin-top:20px; font-size:18px; font-weight:bold; text-align:center;"></div>
+  <div id="advice" style="margin-top:10px; font-size:14px; color:#333; text-align:center;"></div>
+  
+  <div style="margin-top:25px; position:relative; height:40px; border-radius:12px; overflow:hidden; border:1px solid #ccc;">
+    <div style="width:100%; height:100%; 
+                background: linear-gradient(to right, 
+                  #87CEFA 0%, #87CEFA 18.5%, 
+                  #00FF7F 18.5%, #00FF7F 24.9%, 
+                  #FFD700 25%, #FFD700 29.9%, 
+                  #FF4500 30%, #FF4500 100%);">
+    </div>
+    <div id="bmiMarker" style="position:absolute; top:0; height:100%; width:3px; background:black;"></div>
+    <div id="bmiLabel" style="position:absolute; top:-25px; font-weight:bold; color:black;"></div>
+  </div>
+  
+  <div style="margin-top:10px; font-size:12px; display:flex; justify-content:space-between;">
+    <span title="BMI < 18.5: ผอม">ผอม</span>
+    <span title="BMI 18.5–24.9: สมส่วน">สมส่วน</span>
+    <span title="BMI 25–29.9: อวบ">อวบ</span>
+    <span title="BMI ≥ 30: อ้วน">อ้วน</span>
+  </div>
+</div>
+
+<script>
+function calculateBMI() {
+    var weight = parseFloat(document.getElementById('weight').value);
+    var height = parseFloat(document.getElementById('height').value) / 100;
+    
+    if (!weight || !height) {
+        document.getElementById('result').innerText = "กรุณากรอกตัวเลขให้ครบ";
+        document.getElementById('advice').innerText = "";
+        document.getElementById('bmiMarker').style.display = "none";
+        document.getElementById('bmiLabel').style.display = "none";
+        return;
+    }
+    
+    var bmi = weight / (height * height);
+    bmi = bmi.toFixed(1);
+    
+    var status = "";
+    var adviceText = "";
+    
+    if (bmi < 18.5) {
+        status = "ผอม";
+        adviceText = "ควรรับประทานอาหารครบ 5 หมู่ เพิ่มโปรตีนและพลังงาน";
+    } else if (bmi < 25) {
+        status = "สมส่วน";
+        adviceText = "คุณอยู่ในเกณฑ์ปกติ รักษาวิถีชีวิตสมดุลต่อไป";
+    } else if (bmi < 30) {
+        status = "อวบ";
+        adviceText = "ควรควบคุมอาหารและออกกำลังกายสม่ำเสมอ";
+    } else {
+        status = "อ้วน";
+        adviceText = "ควรปรึกษาแพทย์หรือนักโภชนาการ ปรับพฤติกรรมการกินและออกกำลังกาย";
+    }
+    
+    document.getElementById('result').innerText = "ค่า BMI ของคุณ: " + bmi + " (" + status + ")";
+    document.getElementById('advice').innerText = adviceText;
+
+    var marker = document.getElementById('bmiMarker');
+    var label = document.getElementById('bmiLabel');
+    marker.style.display = "block";
+    label.style.display = "block";
+
+    // คำนวณตำแหน่ง marker (max BMI ตั้งไว้ 40)
+    var percent = Math.min((bmi / 40) * 100, 100);
+    marker.style.left = percent + "%";
+    label.style.left = percent + "%";
+    label.innerText = bmi;
+}
+</script>
